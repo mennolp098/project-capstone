@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">capstone project</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcome_user">Welcome %s</string>
+    <string name="question_name">What is your full name?</string>
+    <string name="full_name">full name</string>
+    <string name="lets_go">Let\'s go!</string>
+    <string name="question_who_win">Who will win this time?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
