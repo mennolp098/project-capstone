@@ -9,27 +9,24 @@
     android:paddingLeft="20dp"
     android:paddingEnd="20dp"
     android:paddingRight="20dp"
-    tools:context=".fragments.NewUserFragment">
+    tools:context=".fragments.ManagePlayersFragment">
 
-    <Button
-        android:id="@+id/btnStartNewGame"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:background="@drawable/rounded_drawable"
-        android:backgroundTint="#FFFFFF"
-        android:elevation="2dp"
-        android:text="@string/lets_go"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPlayers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925" />
+        app:layout_constraintTop_toBottomOf="@+id/tvQuestion"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/tvQuestion"
+        android:id="@+id/tvHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/question_name"
+        android:text="@string/new_player_hint"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -43,7 +40,8 @@
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome"
+        android:text="@string/everyone_here"
+        android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="38sp"
         android:textStyle="bold"
@@ -54,20 +52,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.092" />
 
-    <EditText
-        android:id="@+id/etInputField"
-        android:layout_width="0dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="53dp"
-        android:background="@drawable/edit_text_drawable"
-        android:ems="10"
-        android:hint="@string/full_name"
-        android:inputType="textPersonName"
-        android:paddingLeft="10dp"
-        android:textColor="#424242"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fbAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#FFFFFF"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="#000000"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.485" />
+        app:layout_constraintVertical_bias="1.0"
+        android:focusable="true" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

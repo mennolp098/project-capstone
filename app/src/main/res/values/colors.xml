@@ -4,4 +4,32 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="startScreensColor">#44B8AE</color>
+    <color name="colorPlayerOwner">#515151</color>
+
+    <item name="blue" type="color">#49AFD5</item>
+    <item name="purple" type="color">#985FB5</item>
+    <item name="green" type="color">#8EAC38</item>
+    <item name="orange" type="color">#C8A04F</item>
+    <item name="red" type="color">#D16464</item>
+    <item name="darkblue" type="color">#1D6B85</item>
+    <item name="darkpurple" type="color">#773498</item>
+    <item name="darkgreen" type="color">#4F6328</item>
+    <item name="darkorange" type="color">#705536</item>
+    <item name="darkred" type="color">#6E3D3D</item>
+
+    <integer-array name="playercolors">
+        <item>@color/blue</item>
+        <item>@color/purple</item>
+        <item>@color/green</item>
+        <item>@color/orange</item>
+        <item>@color/red</item>
+    </integer-array>
+
+    <integer-array name="backgroundcolors">
+        <item>@color/darkblue</item>
+        <item>@color/darkpurple</item>
+        <item>@color/darkgreen</item>
+        <item>@color/darkorange</item>
+        <item>@color/darkred</item>
+    </integer-array>
 </resources>

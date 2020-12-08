@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
@@ -23,7 +22,7 @@ import kotlinx.coroutines.withContext
 class MainFragment : Fragment() {
     private lateinit var userRepository: UserRepository
     private val mainScope = CoroutineScope(Dispatchers.Main)
-    private var owner: User? = null;
+    private var owner: User? =  User(0, "",true);
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -38,17 +37,88 @@ class MainFragment : Fragment() {
 
         userRepository = UserRepository(requireContext())
         showWelcomeText(view)
+        setListeners(view)
     }
 
-    private fun showWelcomeText(view: View) {
+    /**
+     * Create listeners for this view.
+     */
+    private fun setListeners(view: View) {
+        view.findViewById<Button>(R.id.btnStartNewGame).setOnClickListener {
+            onStartGameButtonClicked(view)
+        }
+        view.findViewById<Button>(R.id.btnManagePlayers).setOnClickListener {
+            onManagePlayersButtonPressed(view)
+        }
+        view.findViewById<Button>(R.id.btnManageGames).setOnClickListener {
+            onManageGamesButtonClicked(view)
+        }
+        view.findViewById<Button>(R.id.btnHistory).setOnClickListener {
+            onHistoryButtonClicked(view)
+        }
+        view.findViewById<Button>(R.id.btnLeaderboards).setOnClickListener {
+            onLeaderboardsButtonClicked(view)
+        }
+
+    }
+
+    /**
+     * Navigates towards  game fragment
+     */
+    private fun onStartGameButtonClicked(view: View) {
+        findNavController().navigate(R.id.action_mainFragment_to_startGameFragment)
+    }
+
+    /**
+     * Navigates towards player fragment
+     */
+    private fun onManagePlayersButtonPressed(view: View) {
+        findNavController().navigate(R.id.action_mainFragment_to_managePlayersFragment)
+    }
+
+    /**
+     * Navigates towards manage games fragment
+     */
+    private fun onManageGamesButtonClicked(view: View) {
+        findNavController().navigate(R.id.action_mainFragment_to_manageGamesFragment)
+    }
+
+    /**
+     * Navigates towards history fragment
+     */
+    private fun onHistoryButtonClicked(view: View) {
+        findNavController().navigate(R.id.action_mainFragment_to_historyFragment)
+
+    }
+
+    /**
+     * Navigates towards leaderboards fragment
+     */
+    private fun onLeaderboardsButtonClicked(view: View) {
+        findNavController().navigate(R.id.action_mainFragment_to_leaderboardsFragment)
+    }
+
+    /**
+     * Retrieve correct owner to show welcome text with username.
+     */
+    private fun getWelcomeText(view: View) {
         mainScope.launch {
             val user = withContext(Dispatchers.IO) {
                 userRepository.getOwner()
             }
-            this@MainFragment.owner = user;
-        }
+            this@MainFragment.owner?.fullName = user.fullName
+            this@MainFragment.owner?.uid = user.uid
+            this@MainFragment.owner?.isAppOwner = user.isAppOwner
 
-        view.findViewById<TextView>(R.id.tv_welcome).text = getString(R.string.welcome_user,
+            this@MainFragment.showWelcomeText(view)
+        }
+    }
+
+    /**
+     * Show welcome text/
+     */
+    private fun showWelcomeText(view: View) {
+        view.findViewById<TextView>(R.id.tvWelcome).text = getString(R.string.welcome_user,
             owner?.fullName
         )
     }

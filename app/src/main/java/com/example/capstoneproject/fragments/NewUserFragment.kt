@@ -41,7 +41,7 @@ class NewUserFragment : Fragment() {
      * Create listeners for this view.
      */
     private fun setListeners(view: View) {
-        view.findViewById<Button>(R.id.btn_nav).setOnClickListener {
+        view.findViewById<Button>(R.id.btnStartNewGame).setOnClickListener {
             onNavButtonPressed(view)
         }
     }
@@ -50,7 +50,7 @@ class NewUserFragment : Fragment() {
      * On nav button pressed check if name is filled in and navigate towards main view.
      */
     private fun onNavButtonPressed(view: View) {
-        val fullNameEditText: EditText = view.findViewById(R.id.et_full_name)
+        val fullNameEditText: EditText = view.findViewById(R.id.etInputField)
         val fullName: String = fullNameEditText.text.toString()
         if(fullName.isNotEmpty()) {
             saveUser(fullName);
@@ -69,6 +69,7 @@ class NewUserFragment : Fragment() {
                 fullName = fullName,
                 isAppOwner = true
             )
+
             withContext(Dispatchers.IO) {
                 userRepository.create(user)
             }

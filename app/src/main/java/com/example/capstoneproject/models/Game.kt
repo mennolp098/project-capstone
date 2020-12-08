@@ -5,8 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class User(
+data class Game(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "uid") var uid: Int?,
-    @ColumnInfo(name = "full_name") var fullName: String?,
-    @ColumnInfo(name = "is_app_owner") var isAppOwner: Boolean?
+    @ColumnInfo(name = "name") var name: String?
 )

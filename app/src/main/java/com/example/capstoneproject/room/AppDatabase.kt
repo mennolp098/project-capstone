@@ -9,6 +9,7 @@ import com.example.capstoneproject.models.User
 @Database(entities = arrayOf(User::class), version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun gameDao(): GameDao
 
     companion object {
         private const val DATABASE_NAME = "APP_DATABASE"

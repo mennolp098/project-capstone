@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4EBC8C"
-    tools:context=".fragments.StartFragment">
+    tools:context=".fragments.NewGameFragment">
 
     <TextView
         android:id="@+id/tvWelcome"

@@ -5,24 +5,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4EBC8C"
+    android:paddingStart="20dp"
+    android:paddingLeft="20dp"
+    android:paddingEnd="20dp"
+    android:paddingRight="20dp"
     tools:context=".fragments.MainFragment">
 
     <Button
-        android:id="@+id/btn_nav"
-        android:layout_width="362dp"
+        android:id="@+id/btnStartNewGame"
+        android:layout_width="0dp"
         android:layout_height="32dp"
         android:background="@drawable/rounded_drawable"
         android:backgroundTint="#FFFFFF"
-        android:elevation="2dp"
-        android:text="@string/lets_go"
+        android:elevation="5dp"
+        android:text="@string/start_new_game"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <Button
+        android:id="@+id/btnManagePlayers"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:background="@drawable/rounded_drawable"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="5dp"
+        android:text="@string/manage_players"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.579" />
+
+    <Button
+        android:id="@+id/btnManageGames"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:background="@drawable/rounded_drawable"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="5dp"
+        android:text="@string/manage_games"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.659" />
+
+    <Button
+        android:id="@+id/btnHistory"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:background="@drawable/rounded_drawable"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="5dp"
+        android:text="@string/history"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925" />
+        app:layout_constraintVertical_bias="0.745" />
+
+    <Button
+        android:id="@+id/btnLeaderboards"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:background="@drawable/rounded_drawable"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="5dp"
+        android:text="@string/leaderboards"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.832" />
 
     <TextView
-        android:id="@+id/tv_question"
+        android:id="@+id/tvQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/question_who_win"
@@ -36,10 +100,11 @@
         app:layout_constraintVertical_bias="0.412" />
 
     <TextView
-        android:id="@+id/tv_welcome"
+        android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome"
+        android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="38sp"
         android:textStyle="bold"

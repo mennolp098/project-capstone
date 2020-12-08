@@ -40,7 +40,6 @@ class StartFragment : Fragment() {
     }
 
     private fun navigateToCorrectFragment() {
-        Log.d("Project", "OK WE WILL BE NAVIGATING BOOOOOIIISSS")
         mainScope.launch {
             val user = withContext(Dispatchers.IO) {
                 userRepository.getOwner()
