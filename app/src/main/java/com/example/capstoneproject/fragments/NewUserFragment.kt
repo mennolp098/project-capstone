@@ -67,7 +67,9 @@ class NewUserFragment : Fragment() {
             val user = User(
                 uid = 0,
                 fullName = fullName,
-                isAppOwner = true
+                isAppOwner = true,
+                isSelected = false,
+                color = resources.getColor(R.color.colorPlayerOwner)
             )
 
             withContext(Dispatchers.IO) {

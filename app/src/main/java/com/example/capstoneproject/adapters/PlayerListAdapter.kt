@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
 import com.example.capstoneproject.models.User
@@ -12,7 +14,8 @@ import kotlin.random.Random
 
 
 class PlayerListAdapter(private val players: List<User>) : RecyclerView.Adapter<PlayerListAdapter.ViewHolder>() {
-    var onItemClick: ((User) -> Unit)? = null
+    var onItemClick: ((User, View) -> Unit)? = null
+    var isSelectionEnabled:Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -27,21 +30,26 @@ class PlayerListAdapter(private val players: List<User>) : RecyclerView.Adapter<
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(players[adapterPosition])
+                onItemClick?.invoke(players[adapterPosition], itemView)
             }
         }
         fun bind(player: User) {
+            itemView.setBackgroundTintList(ColorStateList.valueOf(player.color))
+            itemView.findViewById<TextView>(R.id.tvInitials).text = getInitialsFromFullName(player.fullName)
 
-            val androidColors: IntArray = itemView.resources.getIntArray(R.array.playercolors)
-            var randomAndroidColor = androidColors[Random.nextInt(androidColors.size)]
-
-            if(player.isAppOwner!!)
+            if(isSelectionEnabled && !player.isAppOwner)
             {
-                randomAndroidColor = itemView.resources.getColor(R.color.colorPlayerOwner);
+                itemView.findViewById<View>(R.id.vSelected).alpha = 1F
+                val textView = itemView.findViewById<TextView>(R.id.tvSelected)
+                textView.alpha = 1F
+                if(player.isSelected) {
+                    textView.text = "V"
+                    textView.setTextColor(ColorStateList.valueOf(itemView.resources.getColor(R.color.green)))
+                } else if(!player.isSelected) {
+                    textView.text = "X"
+                    textView.setTextColor(ColorStateList.valueOf(itemView.resources.getColor(R.color.red)))
+                }
             }
-
-            itemView.setBackgroundTintList(ColorStateList.valueOf((randomAndroidColor)))
-            itemView.findViewById<TextView>(R.id.tvInitials).text = getInitialsFromFullName(player.fullName);
         }
     }
 

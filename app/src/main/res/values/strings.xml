@@ -20,5 +20,31 @@
     <string name="leaderboards">leaderboards</string>
     <string name="manage_game_hint">Change rules or create a new game</string>
 
+    <string name="a_new_game">A new game!?</string>
+    <string name="track_game_hint">How will we track the game?</string>
+    <string name="numeric">numeric</string>
+    <string name="letters">letters</string>
+    <string name="letters_hint">What kind of word are we using?</string>
+    <string name="numeric_hint">What amount are we using?</string>
+    <string name="numeric_input_hint">amount</string>
+    <string name="letters_input_hint">word</string>
+    <string name="game_end_hint">What is the final result?</string>
+    <string name="win">win</string>
+    <string name="lose">lose</string>
+    <string name="game_name_hint">Name it and claim it!</string>
+    <string name="game_name">name of game</string>
+    <string name="save_game_rules">save game rules</string>
+
+    <string name="start_game_hint">Let\'s do this!</string>
+    <string name="who_will_play">Who will play with you?</string>
+    <string name="what_game">What game will you be playing?</string>
+    <string name="go_to_next_step">go to next step</string>
+    <string name="start_game">start game</string>
+
     <string name="hello_blank_fragment"> </string>
+
+    <integer-array name="track_kinds">
+        <item>@string/numeric</item>
+        <item>@string/letters</item>
+    </integer-array>
 </resources>

@@ -5,45 +5,49 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
+import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
-import com.example.capstoneproject.adapters.GamesListAdapter
 import com.example.capstoneproject.adapters.PlayerListAdapter
-import com.example.capstoneproject.dialogs.ConfirmDialog
-import com.example.capstoneproject.dialogs.TextDialog
 import com.example.capstoneproject.models.Game
 import com.example.capstoneproject.models.User
 import com.example.capstoneproject.room.GameRepository
 import com.example.capstoneproject.room.UserRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_manage_games.*
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+private const val ARG_GAME_ID = "game_id"
+private const val ARG_PROFILE_IDS = "profile_ids"
+
 /**
  * A simple [Fragment] subclass.
- * Use the [manageGamesFragment.newInstance] factory method to
+ * Use the [GameFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ManageGamesFragment : Fragment(),
-    ConfirmDialog.ConfirmDialogListener    {
+class GameFragment : Fragment() {
     private lateinit var gameRepository: GameRepository
+    private lateinit var userRepository: UserRepository
     private val mainScope = CoroutineScope(Dispatchers.Main)
-    private val gamesList = arrayListOf<Game>()
-    private val gamesListAdapter =
-        GamesListAdapter(gamesList)
-    private var currentSelectedGame: Game? = null
+    private var gameID: Int? = null
+    private var playerIDs: ArrayList<Int>? = null
+    private var game: Game? = null
+    private val playersList = arrayListOf<User>()
+    private val playerListAdapter =
+        PlayerListAdapter(playersList)
+    private var currentSelectedPlayer: User? = null
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        arguments?.let {
+            gameID = it.getInt(ARG_GAME_ID)
+            playerIDs = it.getIntegerArrayList(ARG_PROFILE_IDS)
+        }
     }
 
     override fun onCreateView(
@@ -51,67 +55,61 @@ class ManageGamesFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manage_games, container, false)
+        return inflater.inflate(R.layout.fragment_game, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userRepository = UserRepository(requireContext())
         gameRepository = GameRepository(requireContext())
-        retrieveGames()
+        retrieveGameRules()
+        retrievePlayers()
         initRv()
         setListeners(view)
     }
 
     private fun setListeners(view: View) {
-        view.findViewById<FloatingActionButton>(R.id.fbAdd).setOnClickListener{
-            onAddGameButtonPressed()
-        }
-    }
 
-    private fun onAddGameButtonPressed() {
-        findNavController().navigate(R.id.action_manageGamesFragment_to_newGameFragment)
     }
-
-    override fun onDialogPositiveClick(dialog: DialogFragment) {
-    }
-
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
-        // Cancel button is pressed
-    }
-
 
     private fun initRv() {
         viewManager = GridLayoutManager(activity, 2)
 
-        gamesListAdapter.onItemClick = { game, view ->
-            showRemoveGameDialog(game)
+        playerListAdapter.onItemClick = { player, view ->
+            showPointsDialog(player)
         }
 
-        rvGames.apply {
+        rvPlayers.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = gamesListAdapter
+            adapter = playerListAdapter
         }
     }
 
-    private fun showRemoveGameDialog(game: Game) {
-        currentSelectedGame = game
-
-        val newFragment = ConfirmDialog()
-        newFragment.setParentFragment(this)
-        newFragment.setHintText(resources.getString(R.string.remove_game))
-        newFragment.show(childFragmentManager, "remove-game-dialog")
+    private fun showPointsDialog(player: User) {
+        currentSelectedPlayer = player
     }
 
-    private fun retrieveGames() {
+    private fun retrievePlayers() {
         mainScope.launch {
-            val games = withContext(Dispatchers.IO) {
-                gameRepository.getAll()
+            val users = withContext(Dispatchers.IO) {
+                userRepository.getAll()
             }
-            this@ManageGamesFragment.gamesList.clear()
-            this@ManageGamesFragment.gamesList.addAll(games)
-            this@ManageGamesFragment.gamesListAdapter.notifyDataSetChanged()
+            this@GameFragment.playersList.clear()
+            this@GameFragment.playersList.addAll(users)
+            this@GameFragment.playerListAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun retrieveGameRules() {
+        // Game rules are set
+        mainScope.launch {
+            val game = withContext(Dispatchers.IO) {
+                gameRepository.getById(gameID!!)
+            }
+
+            this@GameFragment.game = game
         }
     }
 }

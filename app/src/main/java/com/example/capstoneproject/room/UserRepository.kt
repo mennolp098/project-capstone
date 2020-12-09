@@ -21,7 +21,11 @@ class UserRepository(context: Context) {
 
     suspend fun getOwner(): User = userDao.getOwner()
 
+    suspend fun getUsersByIds(ids: ArrayList<Int>): List<User> = userDao.getUsersByIds(ids)
+
     suspend fun create(user: User) = userDao.create(user)
+
+    suspend fun update(user: User) = userDao.update(user)
 
     suspend fun delete(user: User) = userDao.delete(user)
 

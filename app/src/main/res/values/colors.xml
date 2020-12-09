@@ -17,6 +17,8 @@
     <item name="darkorange" type="color">#705536</item>
     <item name="darkred" type="color">#6E3D3D</item>
 
+    <item name="disabled" type="color">#808080</item>
+
     <integer-array name="playercolors">
         <item>@color/blue</item>
         <item>@color/purple</item>

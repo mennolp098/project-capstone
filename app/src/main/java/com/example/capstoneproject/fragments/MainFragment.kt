@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 class MainFragment : Fragment() {
     private lateinit var userRepository: UserRepository
     private val mainScope = CoroutineScope(Dispatchers.Main)
-    private var owner: User? =  User(0, "",true);
+    private lateinit var owner: User
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +36,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userRepository = UserRepository(requireContext())
-        showWelcomeText(view)
+        getWelcomeText(view)
         setListeners(view)
     }
 
@@ -106,9 +106,7 @@ class MainFragment : Fragment() {
             val user = withContext(Dispatchers.IO) {
                 userRepository.getOwner()
             }
-            this@MainFragment.owner?.fullName = user.fullName
-            this@MainFragment.owner?.uid = user.uid
-            this@MainFragment.owner?.isAppOwner = user.isAppOwner
+            this@MainFragment.owner = user
 
             this@MainFragment.showWelcomeText(view)
         }

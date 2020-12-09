@@ -9,10 +9,10 @@
     android:paddingLeft="20dp"
     android:paddingEnd="20dp"
     android:paddingRight="20dp"
-    tools:context=".fragments.ManageGamesFragment">
+    tools:context=".fragments.GameFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGames"
+        android:id="@+id/rvPlayers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +25,7 @@
         android:id="@+id/tvHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/manage_game_hint"
+        android:text="@string/new_player_hint"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -39,7 +39,7 @@
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/manage_games"
+        android:text="@string/everyone_here"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="38sp"
@@ -50,23 +50,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.092" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fbAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#FFFFFF"
-        android:clickable="true"
-        android:src="@android:drawable/ic_input_add"
-        android:tint="#000000"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

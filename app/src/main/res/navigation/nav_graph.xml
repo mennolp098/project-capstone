@@ -57,22 +57,25 @@
         android:label="fragment_start_game"
         tools:layout="@layout/fragment_start_game" >
         <action
-            android:id="@+id/action_startGameFragment_to_manageGamesFragment"
-            app:destination="@id/manageGamesFragment" />
+            android:id="@+id/action_startGameFragment_to_managePlayersFragment"
+            app:destination="@id/managePlayersFragment" />
+        <action
+            android:id="@+id/action_startGameFragment_to_startGameRulesFragment"
+            app:destination="@id/startGameRulesFragment" />
     </fragment>
     <fragment
         android:id="@+id/leaderboardsFragment"
-        android:name="com.example.capstoneproject.leaderboardsFragment"
+        android:name="com.example.capstoneproject.LeaderboardsFragment"
         android:label="fragment_leaderboards"
         tools:layout="@layout/fragment_leaderboards" />
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.capstoneproject.fragments.historyFragment"
+        android:name="com.example.capstoneproject.fragments.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/manageGamesFragment"
-        android:name="com.example.capstoneproject.fragments.manageGamesFragment"
+        android:name="com.example.capstoneproject.fragments.ManageGamesFragment"
         android:label="fragment_manage_games"
         tools:layout="@layout/fragment_manage_games" >
         <action
@@ -84,4 +87,18 @@
         android:name="com.example.capstoneproject.fragments.NewGameFragment"
         android:label="fragment_new_game"
         tools:layout="@layout/fragment_new_game" />
+    <fragment
+        android:id="@+id/startGameRulesFragment"
+        android:name="com.example.capstoneproject.fragments.StartGameRulesFragment"
+        android:label="fragment_start_game_rules"
+        tools:layout="@layout/fragment_start_game_rules" >
+        <action
+            android:id="@+id/action_startGameRulesFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.example.capstoneproject.fragments.GameFragment"
+        android:label="fragment_game"
+        tools:layout="@layout/fragment_game" />
 </navigation>

@@ -14,6 +14,7 @@ import com.example.capstoneproject.dialogs.TextDialog
 import com.example.capstoneproject.dialogs.ConfirmDialog
 import com.example.capstoneproject.models.User
 import com.example.capstoneproject.room.UserRepository
+import com.example.capstoneproject.utils.ColorUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
@@ -92,7 +93,7 @@ class ManagePlayersFragment : Fragment(),
     private fun initRv() {
         viewManager = GridLayoutManager(activity, 2)
 
-        playerListAdapter.onItemClick = { player ->
+        playerListAdapter.onItemClick = { player, view ->
             showRemovePlayerDialog(player)
         }
 
@@ -141,10 +142,13 @@ class ManagePlayersFragment : Fragment(),
      */
     private fun createNewPlayer(fullName: String) {
         mainScope.launch {
+            val randomColor = ColorUtils().getRandomAndroidColor(resources)
             val user = User(
                 uid = null,
                 fullName = fullName,
-                isAppOwner = false
+                isAppOwner = false,
+                isSelected = false,
+                color = randomColor
             )
 
             withContext(Dispatchers.IO) {

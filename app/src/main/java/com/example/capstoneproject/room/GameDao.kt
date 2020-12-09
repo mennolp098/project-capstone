@@ -13,8 +13,8 @@ interface GameDao {
     @Query("SELECT * FROM game")
     fun getAll(): List<Game>
 
-    @Query("SELECT * FROM game WHERE uid = 0 LIMIT 1")
-    fun getOwner(): Game
+    @Query("SELECT * FROM game WHERE uid = :id LIMIT 1")
+    fun getById(id:Int): Game
 
     @Insert
     fun create(vararg games: Game)

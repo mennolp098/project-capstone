@@ -19,9 +19,9 @@ class GameRepository(context: Context) {
 
     suspend fun getAll(): List<Game> = gameDao.getAll()
 
-    suspend fun getOwner(): Game = gameDao.getOwner()
-
     suspend fun create(game: Game) = gameDao.create(game)
+
+    suspend fun getById(id: Int): Game = gameDao.getById(id)
 
     suspend fun delete(game: Game) = gameDao.delete(game)
 

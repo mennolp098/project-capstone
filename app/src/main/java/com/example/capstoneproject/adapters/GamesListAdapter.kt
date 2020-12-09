@@ -13,7 +13,7 @@ import kotlin.random.Random
 
 
 class GamesListAdapter(private val games: List<Game>) : RecyclerView.Adapter<GamesListAdapter.ViewHolder>() {
-    var onItemClick: ((Game) -> Unit)? = null
+    var onItemClick: ((Game,View) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -28,11 +28,17 @@ class GamesListAdapter(private val games: List<Game>) : RecyclerView.Adapter<Gam
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(games[adapterPosition])
+                onItemClick?.invoke(games[adapterPosition], itemView)
             }
         }
         fun bind(game: Game) {
-
+            itemView.findViewById<TextView>(R.id.tvDescription).text = getDescriptionFromEnd(game)
+            itemView.findViewById<TextView>(R.id.tvTitle).text = game.name
         }
+    }
+
+    private fun getDescriptionFromEnd(game: Game): String? {
+        //TODO: Create correct description
+        return game.trackEnd
     }
 }

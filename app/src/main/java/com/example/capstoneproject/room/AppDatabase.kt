@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.capstoneproject.models.Game
 import com.example.capstoneproject.models.User
 
-@Database(entities = arrayOf(User::class), version = 1)
+@Database(entities = arrayOf(User::class, Game::class), version = 4)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun gameDao(): GameDao
@@ -25,7 +26,9 @@ abstract class AppDatabase : RoomDatabase() {
                             Room.databaseBuilder(context.applicationContext,
                                 AppDatabase::class.java,
                                 DATABASE_NAME
-                            ).build()
+                            )
+                            .fallbackToDestructiveMigration()
+                            .build()
                     }
                 }
             }
