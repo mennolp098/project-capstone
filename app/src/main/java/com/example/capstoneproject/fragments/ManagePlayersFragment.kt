@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
@@ -15,6 +19,7 @@ import com.example.capstoneproject.dialogs.TextDialog
 import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.UserRepository
 import com.example.capstoneproject.utils.ColorUtils
+import com.example.capstoneproject.viewmodels.UserViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_manage_players.*
@@ -30,14 +35,13 @@ import kotlinx.coroutines.withContext
 class ManagePlayersFragment : Fragment(),
                                 TextDialog.TextDialogListener,
                                 ConfirmDialog.ConfirmDialogListener    {
-    private lateinit var userRepository: UserRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
     private val playersList = arrayListOf<User>()
     private val playerListAdapter =
         PlayerListAdapter(playersList)
     private var currentSelectedPlayer: User? = null
     private var currentSelectedPlayerListPosition: Int? = null
     private lateinit var viewManager: RecyclerView.LayoutManager
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +59,29 @@ class ManagePlayersFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userRepository = UserRepository(requireContext())
-        retrievePlayers()
+        observeUsers()
         initRv()
         setListeners(view)
     }
+
+    private fun observeUsers() {
+        userViewModel.userList.observe(viewLifecycleOwner, Observer {
+                users  ->
+            users?.let {
+                playersList.clear()
+                playersList.addAll(users)
+                playerListAdapter.notifyDataSetChanged()
+            }
+        })
+        userViewModel.error.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        })
+
+        userViewModel.success.observe(viewLifecycleOwner, Observer {     success ->
+            //Nothing to do here..
+        })
+    }
+
 
     private fun setListeners(view: View) {
         view.findViewById<FloatingActionButton>(R.id.fbAdd).setOnClickListener{
@@ -96,7 +118,9 @@ class ManagePlayersFragment : Fragment(),
         viewManager = GridLayoutManager(activity, 2)
 
         playerListAdapter.onItemClick = { player, view, position ->
-            showRemovePlayerDialog(player, position)
+            if(!player.isAppOwner) {
+                showRemovePlayerDialog(player, position)
+            }
         }
 
         rvPlayers.apply {
@@ -116,17 +140,6 @@ class ManagePlayersFragment : Fragment(),
         newFragment.show(childFragmentManager, "remove-profile-dialog")
     }
 
-    private fun retrievePlayers() {
-        mainScope.launch {
-            val users = withContext(Dispatchers.IO) {
-                userRepository.getAll()
-            }
-            this@ManagePlayersFragment.playersList.clear()
-            this@ManagePlayersFragment.playersList.addAll(users)
-            this@ManagePlayersFragment.playerListAdapter.notifyDataSetChanged()
-        }
-    }
-
     private fun removeSelectedPlayer(view: View) {
         val user = currentSelectedPlayer
         val position = currentSelectedPlayerListPosition
@@ -136,17 +149,14 @@ class ManagePlayersFragment : Fragment(),
         snackbar.setAction(
             "Undo"
         ) {
+            // Remove from adapter only so we won't query room db
             playerListAdapter.add(user, position)
         }
         snackbar.addCallback(object : Snackbar.Callback() {
             override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
                 if (event == DISMISS_EVENT_TIMEOUT) {
-                    mainScope.launch {
-                        withContext(Dispatchers.IO) {
-                            if (user != null) {
-                                userRepository.delete(user)
-                            }
-                        }
+                    if (user != null) {
+                        userViewModel.delete(user)
                     }
                 }
             }
@@ -158,21 +168,7 @@ class ManagePlayersFragment : Fragment(),
      * Save first user in app.
      */
     private fun createNewPlayer(fullName: String) {
-        mainScope.launch {
-            val randomColor = ColorUtils().getRandomAndroidColor(resources)
-            val user = User(
-                userUid = null,
-                fullName = fullName,
-                isAppOwner = false,
-                isSelected = false,
-                color = randomColor
-            )
-
-            withContext(Dispatchers.IO) {
-                userRepository.create(user)
-            }
-
-            this@ManagePlayersFragment.retrievePlayers()
-        }
+        val randomColor = ColorUtils().getRandomAndroidColor(resources)
+        userViewModel.createUser(fullName, false, randomColor)
     }
 }

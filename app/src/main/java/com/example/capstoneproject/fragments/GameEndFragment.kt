@@ -69,11 +69,13 @@ class GameEndFragment : Fragment() {
     }
 
     private fun onBackToMainButtonPressed() {
-        findNavController().navigate(R.id.action_gameEndFragment_to_mainFragment)
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, false).build()
+        findNavController().navigate(R.id.action_gameEndFragment_to_mainFragment, null, navOptions)
     }
 
     private fun onStartNewRoundPressed() {
-        findNavController().navigate(R.id.action_gameEndFragment_to_startGameFragment)
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.startGameFragment, false).build()
+        findNavController().navigate(R.id.action_gameEndFragment_to_startGameFragment, null, navOptions)
     }
 
 }

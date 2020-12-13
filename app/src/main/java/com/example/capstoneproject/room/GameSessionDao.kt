@@ -1,5 +1,6 @@
 package com.example.capstoneproject.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.capstoneproject.entities.Game
 import com.example.capstoneproject.entities.GameSession
@@ -9,10 +10,10 @@ import com.example.capstoneproject.entities.relations.GameSessionWithPlayerResul
 @Dao
 interface GameSessionDao {
     @Query("SELECT * FROM GameSession")
-    fun getAll(): List<GameSession>
+    fun getAll(): LiveData<List<GameSession>>
 
     @Query("SELECT * FROM GameSession WHERE gameSessionUid = :id LIMIT 1")
-    fun getById(id:Int): GameSession
+    fun getById(id:Int): LiveData<GameSession>
 
     @Insert
     fun create(vararg gameSessions: GameSession): List<Long>
@@ -32,13 +33,16 @@ interface GameSessionDao {
     @Query("DELETE FROM GameSession")
     suspend fun deleteAll()
 
+    @Query("SELECT * FROM GameSession ORDER BY gameSessionUid DESC LIMIT 1")
+    fun getLastCreatedGameSession(): LiveData<GameSession>
+
     @Transaction
     @Query("SELECT * FROM GameSession WHERE gameSessionUid = :gameSessionUid LIMIT 1")
-    suspend fun getSessionWithPlayerResultsAndGameById(gameSessionUid: Int): GameSessionWithPlayerResultsAndGame
+    fun getSessionWithPlayerResultsAndGameById(gameSessionUid: Int): LiveData<GameSessionWithPlayerResultsAndGame>
 
     @Transaction
     @Query("SELECT * FROM GameSession")
-    suspend fun getSessionsWithPlayerResultsAndGame(): List<GameSessionWithPlayerResultsAndGame>
+    fun getSessionsWithPlayerResultsAndGame(): LiveData<List<GameSessionWithPlayerResultsAndGame>>
 
     /*
     @Transaction

@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +17,7 @@ import com.example.capstoneproject.adapters.GamesListAdapter
 import com.example.capstoneproject.dialogs.ConfirmDialog
 import com.example.capstoneproject.entities.Game
 import com.example.capstoneproject.room.GameRepository
+import com.example.capstoneproject.viewmodels.GameViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_manage_games.*
@@ -21,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.Observer
 
 /**
  * A simple [Fragment] subclass.
@@ -29,14 +34,14 @@ import kotlinx.coroutines.withContext
  */
 class ManageGamesFragment : Fragment(),
     ConfirmDialog.ConfirmDialogListener    {
-    private lateinit var gameRepository: GameRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
-    private val gamesList = arrayListOf<Game>()
+    private var gamesList = arrayListOf<Game>()
     private val gamesListAdapter =
         GamesListAdapter(gamesList)
     private var currentSelectedGame: Game? = null
     private var currentSelectedGamePosition: Int? = null
     private lateinit var viewManager: RecyclerView.LayoutManager
+
+    private val gameViewModel: GameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +59,20 @@ class ManageGamesFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        gameRepository = GameRepository(requireContext())
-        retrieveGames()
+        observeGames()
         initRv()
         setListeners(view)
+    }
+
+    private fun observeGames() {
+        gameViewModel.gamesList.observe(viewLifecycleOwner, Observer {
+                games  ->
+            games?.let {
+                gamesList.clear()
+                gamesList.addAll(games)
+                gamesListAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     private fun setListeners(view: View) {
@@ -89,12 +104,8 @@ class ManageGamesFragment : Fragment(),
         snackbar.addCallback(object : Snackbar.Callback() {
             override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
                 if (event == DISMISS_EVENT_TIMEOUT) {
-                    mainScope.launch {
-                        withContext(Dispatchers.IO) {
-                            if (game != null) {
-                                gameRepository.delete(game)
-                            }
-                        }
+                    if (game != null) {
+                        gameViewModel.delete(game)
                     }
                 }
             }
@@ -129,16 +140,5 @@ class ManageGamesFragment : Fragment(),
         newFragment.setParentFragment(this)
         newFragment.setHintText(resources.getString(R.string.remove_game))
         newFragment.show(childFragmentManager, "remove-game-dialog")
-    }
-
-    private fun retrieveGames() {
-        mainScope.launch {
-            val games = withContext(Dispatchers.IO) {
-                gameRepository.getAll()
-            }
-            this@ManageGamesFragment.gamesList.clear()
-            this@ManageGamesFragment.gamesList.addAll(games)
-            this@ManageGamesFragment.gamesListAdapter.notifyDataSetChanged()
-        }
     }
 }

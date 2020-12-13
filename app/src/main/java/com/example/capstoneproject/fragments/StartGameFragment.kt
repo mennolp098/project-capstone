@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +21,8 @@ import com.example.capstoneproject.entities.Game
 import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.GameRepository
 import com.example.capstoneproject.room.UserRepository
+import com.example.capstoneproject.viewmodels.GameViewModel
+import com.example.capstoneproject.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.fragment_manage_games.*
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
@@ -32,17 +37,17 @@ import kotlinx.coroutines.withContext
  * create an instance of this fragment.
  */
 class StartGameFragment : Fragment() {
-    private lateinit var userRepository: UserRepository
-    private lateinit var gameRepository: GameRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
     private val playersList = arrayListOf<User>()
     private val playerListAdapter =
         PlayerListAdapter(playersList)
-    private val gamesList = arrayListOf<Game>()
+    private var gamesList = arrayListOf<Game>()
     private val gamesListAdapter =
         GamesListAdapter(gamesList)
     private lateinit var playerViewManager: RecyclerView.LayoutManager
     private lateinit var gameViewManager: RecyclerView.LayoutManager
+
+    private val gameViewModel: GameViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,10 +60,8 @@ class StartGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userRepository = UserRepository(requireContext())
-        gameRepository = GameRepository(requireContext())
-        retrievePlayers()
-        retrieveGames()
+        observeUsers()
+        observeGames()
         initRvs()
         setListeners(view)
     }
@@ -67,6 +70,28 @@ class StartGameFragment : Fragment() {
         view.findViewById<Button>(R.id.btnManagePlayers).setOnClickListener{
             findNavController().navigate(R.id.action_startGameFragment_to_managePlayersFragment)
         }
+    }
+
+    private fun observeGames() {
+        gameViewModel.gamesList.observe(viewLifecycleOwner, Observer {
+                games  ->
+            games?.let {
+                gamesList.clear()
+                gamesList.addAll(games)
+                gamesListAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun observeUsers() {
+        userViewModel.userList.observe(viewLifecycleOwner, Observer {
+                users  ->
+            users?.let {
+                playersList.clear()
+                playersList.addAll(users)
+                playerListAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     private fun initRvs() {
@@ -103,9 +128,7 @@ class StartGameFragment : Fragment() {
     }
 
     private fun updatePlayer(player: User) {
-        mainScope.launch {
-            withContext(Dispatchers.IO) {userRepository.update(player)}
-        }
+        userViewModel.update(player)
     }
 
     private fun onGameClicked(game: Game, view: View) {
@@ -117,27 +140,5 @@ class StartGameFragment : Fragment() {
         }
         val bundle = bundleOf("game_id" to game.gameUid, "player_ids" to playerIds)
         findNavController().navigate(R.id.action_startGameFragment_to_startGameRulesFragment, bundle)
-    }
-
-    private fun retrievePlayers() {
-        mainScope.launch {
-            val users = withContext(Dispatchers.IO) {
-                userRepository.getAll()
-            }
-            this@StartGameFragment.playersList.clear()
-            this@StartGameFragment.playersList.addAll(users)
-            this@StartGameFragment.playerListAdapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun retrieveGames() {
-        mainScope.launch {
-            val games = withContext(Dispatchers.IO) {
-                gameRepository.getAll()
-            }
-            this@StartGameFragment.gamesList.clear()
-            this@StartGameFragment.gamesList.addAll(games)
-            this@StartGameFragment.gamesListAdapter.notifyDataSetChanged()
-        }
     }
 }

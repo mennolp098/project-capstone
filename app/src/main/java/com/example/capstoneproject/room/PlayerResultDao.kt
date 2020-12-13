@@ -15,7 +15,10 @@ interface PlayerResultDao {
     fun getById(id:Int): PlayerResult
 
     @Insert
-    fun create(vararg gameRules: PlayerResult)
+    suspend fun create(vararg playerResult: PlayerResult)
+
+    @Insert
+    suspend fun createAll(playerResult: ArrayList<PlayerResult>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(vararg user: User)

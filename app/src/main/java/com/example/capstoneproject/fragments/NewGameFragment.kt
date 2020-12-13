@@ -8,9 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
 import com.example.capstoneproject.entities.Game
 import com.example.capstoneproject.room.GameRepository
+import com.example.capstoneproject.viewmodels.GameViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,8 +26,7 @@ import kotlinx.coroutines.withContext
  * create an instance of this fragment.
  */
 class NewGameFragment : Fragment() {
-    private lateinit var gameRepository: GameRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
+    val gameViewModel:GameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +44,18 @@ class NewGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        gameRepository = GameRepository(requireContext())
         setListeners(view)
+        observeGameViewModel()
+    }
+
+    private fun observeGameViewModel() {
+        gameViewModel.error.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        })
+
+        gameViewModel.success.observe(viewLifecycleOwner, Observer {     success ->
+            findNavController().popBackStack()
+        })
     }
 
     private fun setListeners(view: View) {
@@ -68,35 +81,6 @@ class NewGameFragment : Fragment() {
         val trackKind = resources.getString(R.string.numeric)
         val trackEnd = resources.getString(R.string.win)
 
-        val game = Game(
-            gameUid = null,
-            name = name,
-            trackKind = trackKind,
-            trackAmount = trackAmount,
-            trackEnd = trackEnd,
-            isSelected = false
-        )
-
-        saveGame(game)
-    }
-
-    /**
-     * Save a new game
-     */
-    private fun saveGame(game: Game) {
-        mainScope.launch {
-            withContext(Dispatchers.IO) {
-                gameRepository.create(game)
-
-                this@NewGameFragment.onGameSaved()
-            }
-        }
-    }
-
-    /**
-     * On game saved navigate back.
-     */
-    private fun onGameSaved() {
-        activity?.onBackPressed()
+        gameViewModel.createGame(name, trackEnd, trackAmount, trackKind)
     }
 }

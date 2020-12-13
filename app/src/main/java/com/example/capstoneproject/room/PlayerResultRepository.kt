@@ -16,16 +16,18 @@ class PlayerResultRepository(context: Context) {
     }
 
 
-    suspend fun getAll(): List<PlayerResult> = playerResultDao.getAll()
+    fun getAll(): List<PlayerResult> = playerResultDao.getAll()
 
     suspend fun create(playerResult: PlayerResult) = playerResultDao.create(playerResult)
 
-    suspend fun getById(id: Int): PlayerResult = playerResultDao.getById(id)
+    suspend fun createAll(playerResults: ArrayList<PlayerResult>) = playerResultDao.createAll(playerResults)
+
+    fun getById(id: Int): PlayerResult = playerResultDao.getById(id)
 
     suspend fun delete(playerResult: PlayerResult) = playerResultDao.delete(playerResult)
 
     suspend fun deleteAll() = playerResultDao.deleteAll()
 
-    suspend fun update(playerResult: PlayerResult) = playerResultDao.update(playerResult)
+    fun update(playerResult: PlayerResult) = playerResultDao.update(playerResult)
 
 }

@@ -1,6 +1,7 @@
 package com.example.capstoneproject.room
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.example.capstoneproject.entities.Game
 
 class GameRepository(context: Context) {
@@ -16,11 +17,11 @@ class GameRepository(context: Context) {
     }
 
 
-    suspend fun getAll(): List<Game> = gameDao.getAll()
+    fun getAll(): LiveData<List<Game>?> = gameDao.getAll()
 
     suspend fun create(game: Game) = gameDao.create(game)
 
-    suspend fun getById(id: Int): Game = gameDao.getById(id)
+    fun getById(id: Int): LiveData<Game> = gameDao.getById(id)
 
     suspend fun delete(game: Game) = gameDao.delete(game)
 

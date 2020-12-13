@@ -1,5 +1,6 @@
 package com.example.capstoneproject.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -9,10 +10,10 @@ import com.example.capstoneproject.entities.Game
 @Dao
 interface GameDao {
     @Query("SELECT * FROM game")
-    fun getAll(): List<Game>
+    fun getAll(): LiveData<List<Game>?>
 
     @Query("SELECT * FROM game WHERE gameUid = :id LIMIT 1")
-    fun getById(id:Int): Game
+    fun getById(id:Int): LiveData<Game>
 
     @Insert
     fun create(vararg game: Game)

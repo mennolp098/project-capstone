@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.entities.relations.GameSessionWithPlayerResultsAndGame
 import com.example.capstoneproject.room.GameSessionRepository
 import com.example.capstoneproject.room.UserRepository
+import com.example.capstoneproject.viewmodels.GameSessionViewModel
 import kotlinx.android.synthetic.main.fragment_history.*
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
@@ -34,8 +37,8 @@ import kotlinx.coroutines.withContext
  */
 class HistoryFragment : Fragment(),
                         ConfirmDialog.ConfirmDialogListener {
-    private lateinit var gameSessionRepository: GameSessionRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
+
+    private val gameSessionViewModel: GameSessionViewModel by viewModels()
     private val gameSessionList = arrayListOf<GameSessionWithPlayerResultsAndGame>()
     private val historyAdapter =
         HistoryAdapter(gameSessionList)
@@ -56,9 +59,19 @@ class HistoryFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        gameSessionRepository = GameSessionRepository(requireContext())
-        retrieveHistory()
+        observeGameSessionModel()
         initRv()
+    }
+
+    private fun observeGameSessionModel() {
+        gameSessionViewModel.gameSessionWithPlayerResultsAndGameList.observe(viewLifecycleOwner, Observer {
+                games  ->
+            games?.let {
+                gameSessionList.clear()
+                gameSessionList.addAll(games)
+                historyAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     private fun initRv() {
@@ -89,17 +102,6 @@ class HistoryFragment : Fragment(),
         newFragment.setParentFragment(this)
         newFragment.setHintText(resources.getString(R.string.open_game_session))
         newFragment.show(childFragmentManager, "open-game-session-dialog")
-    }
-
-    private fun retrieveHistory() {
-        mainScope.launch {
-            val gameSessions = withContext(Dispatchers.IO) {
-                gameSessionRepository.getSessionsWithPlayerResultsAndGame()
-            }
-            this@HistoryFragment.gameSessionList.clear()
-            this@HistoryFragment.gameSessionList.addAll(gameSessions)
-            this@HistoryFragment.historyAdapter.notifyDataSetChanged()
-        }
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {

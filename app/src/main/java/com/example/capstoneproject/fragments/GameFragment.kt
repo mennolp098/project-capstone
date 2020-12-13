@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +29,8 @@ import com.example.capstoneproject.room.GameSessionRepository
 import com.example.capstoneproject.room.PlayerResultRepository
 import com.example.capstoneproject.room.UserRepository
 import com.example.capstoneproject.utils.ValueStepsUtil
+import com.example.capstoneproject.viewmodels.GameSessionViewModel
+import com.example.capstoneproject.viewmodels.PlayerResultViewModel
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,9 +46,8 @@ private const val ARG_GAME_SESSION_ID = "game_session_id"
  */
 class GameFragment : Fragment(),
     PointsDialog.PointsDialogListener  {
-    private lateinit var gameSessionRepository: GameSessionRepository
-    private lateinit var playerResultRepository: PlayerResultRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
+    private val playerResultViewModel: PlayerResultViewModel by viewModels()
+    private val gameSessionViewModel: GameSessionViewModel by viewModels()
     private var gameSessionId: Int? = null
     private var gameSession: GameSession? = null
     private var game: Game? = null
@@ -71,10 +75,7 @@ class GameFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        gameSessionRepository = GameSessionRepository(requireContext())
-        playerResultRepository = PlayerResultRepository(requireContext())
-
-        retrieveGameSession()
+        observeGameSessionModel()
         initRv()
         setListeners(view)
     }
@@ -110,21 +111,19 @@ class GameFragment : Fragment(),
         newFragment.show(childFragmentManager, "add-points-dialog")
     }
 
-    private fun retrieveGameSession() {
-        mainScope.launch {
-            val gameSessionWithPlayerResultsAndGame = withContext(Dispatchers.IO) {
-                gameSessionRepository.getSessionWithPlayerResultsAndGameById(gameSessionId!!)
+    private fun observeGameSessionModel() {
+        gameSessionViewModel.getGameSessionWithPlayerResultsAndGameById(gameSessionId!!).observe(viewLifecycleOwner, Observer {
+                gameSession  ->
+            gameSession?.let {
+                this.game = gameSession.gameSessionWithGame.game
+                this.gameSession = gameSession.gameSessionWithGame.gameSession
+
+                playersResultList.clear()
+                playersResultList.addAll(gameSession.playerResults)
+                playerResultListAdapter.notifyDataSetChanged()
+
             }
-
-            val game = gameSessionWithPlayerResultsAndGame.gameSessionWithGame.game
-            val playerResults = gameSessionWithPlayerResultsAndGame.playerResults
-
-            this@GameFragment.gameSession = gameSessionWithPlayerResultsAndGame.gameSessionWithGame.gameSession
-            this@GameFragment.game = game
-            this@GameFragment.playersResultList.clear()
-            this@GameFragment.playersResultList.addAll(playerResults)
-            this@GameFragment.playerResultListAdapter.notifyDataSetChanged()
-        }
+        })
     }
 
     override fun onPointsDialogPositiveClick(dialog: DialogFragment, points: Int) {
@@ -136,21 +135,13 @@ class GameFragment : Fragment(),
             onPlayerWon(currentSelectedPlayerResult?.user!!)
         }
 
-        mainScope.launch {
-            withContext(Dispatchers.IO) {
-                playerResultRepository.update(currentSelectedPlayerResult?.playerResult!!)
-            }
-        }
+        playerResultViewModel.update(currentSelectedPlayerResult?.playerResult!!)
     }
 
     private fun onPlayerWon(user: User) {
         // Set gamesession to finished
-        mainScope.launch {
-            withContext(Dispatchers.IO) {
-                gameSession?.isFinished = true
-                gameSessionRepository.update(gameSession!!)
-            }
-        }
+        gameSession?.isFinished = true
+        gameSessionViewModel.update(gameSession!!)
 
         openPlayerWonView(user)
     }
@@ -167,8 +158,9 @@ class GameFragment : Fragment(),
             }
         }
 
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, true).build()
         val bundle = bundleOf("user_full_name" to userFullName, "points_between_first_and_second" to pointsBetweenFirstAndSecond)
-        findNavController().navigate(R.id.action_gameFragment_to_gameEndFragment, bundle)
+        findNavController().navigate(R.id.action_gameFragment_to_gameEndFragment, bundle, navOptions)
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {

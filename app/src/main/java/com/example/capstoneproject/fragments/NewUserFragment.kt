@@ -7,10 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
 import com.example.capstoneproject.entities.User
+import com.example.capstoneproject.extensions.observeOnce
 import com.example.capstoneproject.room.UserRepository
+import com.example.capstoneproject.viewmodels.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,8 +25,7 @@ import kotlinx.coroutines.withContext
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class NewUserFragment : Fragment() {
-    private lateinit var userRepository: UserRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +39,17 @@ class NewUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setListeners(view);
-        userRepository = UserRepository(requireContext())
+        observeUserViewModel()
+    }
+
+    private fun observeUserViewModel() {
+        userViewModel.error.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        })
+
+        userViewModel.success.observeOnce(viewLifecycleOwner, Observer {     success ->
+            findNavController().navigate(R.id.action_newUserFragment_to_mainFragment)
+        })
     }
     /**
      * Create listeners for this view.
@@ -52,29 +66,7 @@ class NewUserFragment : Fragment() {
     private fun onNavButtonPressed(view: View) {
         val fullNameEditText: EditText = view.findViewById(R.id.etInputField)
         val fullName: String = fullNameEditText.text.toString()
-        if(fullName.isNotEmpty()) {
-            saveUser(fullName);
 
-            findNavController().navigate(R.id.action_newUserFragment_to_mainFragment)
-        }
-    }
-
-    /**
-     * Save first user in app.
-     */
-    private fun saveUser(fullName: String) {
-        mainScope.launch {
-            val user = User(
-                userUid = 0,
-                fullName = fullName,
-                isAppOwner = true,
-                isSelected = false,
-                color = resources.getColor(R.color.colorPlayerOwner)
-            )
-
-            withContext(Dispatchers.IO) {
-                userRepository.create(user)
-            }
-        }
+        userViewModel.createUser(fullName, true, resources.getColor(R.color.colorPlayerOwner))
     }
 }

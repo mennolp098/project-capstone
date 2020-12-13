@@ -8,22 +8,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.example.capstoneproject.R
 import com.example.capstoneproject.entities.User
-import com.example.capstoneproject.room.UserRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.capstoneproject.viewmodels.UserViewModel
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class MainFragment : Fragment() {
-    private lateinit var userRepository: UserRepository
-    private val mainScope = CoroutineScope(Dispatchers.Main)
-    private lateinit var owner: User
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +34,6 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userRepository = UserRepository(requireContext())
         getWelcomeText(view)
         setListeners(view)
     }
@@ -88,6 +85,7 @@ class MainFragment : Fragment() {
      * Navigates towards history fragment
      */
     private fun onHistoryButtonClicked(view: View) {
+
         findNavController().navigate(R.id.action_mainFragment_to_historyFragment)
 
     }
@@ -105,22 +103,19 @@ class MainFragment : Fragment() {
      * Retrieve correct owner to show welcome text with username.
      */
     private fun getWelcomeText(view: View) {
-        mainScope.launch {
-            val user = withContext(Dispatchers.IO) {
-                userRepository.getOwner()
+        userViewModel.owner.observe(viewLifecycleOwner, Observer {
+                owner  ->
+            owner?.let {
+                val welcomeText = getString(R.string.welcome_user,owner.fullName)
+                showWelcomeText(view, welcomeText)
             }
-            this@MainFragment.owner = user
-
-            this@MainFragment.showWelcomeText(view)
-        }
+        })
     }
 
     /**
      * Show welcome text/
      */
-    private fun showWelcomeText(view: View) {
-        view.findViewById<TextView>(R.id.tvWelcome).text = getString(R.string.welcome_user,
-            owner?.fullName
-        )
+    private fun showWelcomeText(view: View, welcomeText: String) {
+        view.findViewById<TextView>(R.id.tvWelcome).text = welcomeText
     }
 }
