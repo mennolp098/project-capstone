@@ -11,7 +11,7 @@ import com.example.capstoneproject.entities.GameSession
 import com.example.capstoneproject.entities.PlayerResult
 import com.example.capstoneproject.entities.User
 
-@Database(entities = arrayOf(User::class, Game::class, PlayerResult::class, GameSession::class), version = 18)
+@Database(entities = arrayOf(User::class, Game::class, PlayerResult::class, GameSession::class), version = 20)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

@@ -10,14 +10,29 @@ import com.example.capstoneproject.R
 import com.example.capstoneproject.entities.User
 
 
-class PlayerListAdapter(private val players: List<User>) : RecyclerView.Adapter<PlayerListAdapter.ViewHolder>() {
-    var onItemClick: ((User, View) -> Unit)? = null
+class PlayerListAdapter(private val players: MutableList<User>) : RecyclerView.Adapter<PlayerListAdapter.ViewHolder>() {
+    var onItemClick: ((User, View, Int) -> Unit)? = null
     var isSelectionEnabled:Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_player, parent, false)
         )
+    }
+
+
+    fun remove(position: Int): User? {
+        if (position < itemCount && position >= 0) {
+            val item: User = players.removeAt(position)
+            notifyItemRemoved(position)
+            return item
+        }
+        return null
+    }
+
+    fun add(item: User?, position: Int) {
+        players.add(position, item!!)
+        notifyItemInserted(position)
     }
 
     override fun getItemCount(): Int = players.size
@@ -27,7 +42,7 @@ class PlayerListAdapter(private val players: List<User>) : RecyclerView.Adapter<
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(players[adapterPosition], itemView)
+                onItemClick?.invoke(players[adapterPosition], itemView, adapterPosition)
             }
         }
         fun bind(player: User) {

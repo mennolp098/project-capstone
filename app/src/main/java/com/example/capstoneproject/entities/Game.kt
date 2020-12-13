@@ -11,5 +11,6 @@ data class Game(
     @ColumnInfo(name = "trackKind") var trackKind: String?,
     @ColumnInfo(name = "trackAmount") var trackAmount: String?,
     @ColumnInfo(name = "trackEnd") var trackEnd: String?,
-    @ColumnInfo(name = "isSelected") var isSelected: Boolean?
+    @ColumnInfo(name = "isSelected") var isSelected: Boolean = false,
+    @ColumnInfo(name = "isDeleted") var isDeleted: Boolean = false
 )

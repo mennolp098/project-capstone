@@ -17,7 +17,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="@string/new_player_introduction" />
+        android:text="@string/new_player_introduction"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tvPointsOutput"

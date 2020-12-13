@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
 import com.example.capstoneproject.adapters.PlayerListAdapter
-import com.example.capstoneproject.dialogs.TextDialog
 import com.example.capstoneproject.dialogs.ConfirmDialog
+import com.example.capstoneproject.dialogs.TextDialog
 import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.UserRepository
 import com.example.capstoneproject.utils.ColorUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,7 @@ class ManagePlayersFragment : Fragment(),
     private val playerListAdapter =
         PlayerListAdapter(playersList)
     private var currentSelectedPlayer: User? = null
+    private var currentSelectedPlayerListPosition: Int? = null
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +84,7 @@ class ManagePlayersFragment : Fragment(),
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        removeSelectedPlayer()
+        removeSelectedPlayer(this.requireView())
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {
@@ -93,8 +95,8 @@ class ManagePlayersFragment : Fragment(),
     private fun initRv() {
         viewManager = GridLayoutManager(activity, 2)
 
-        playerListAdapter.onItemClick = { player, view ->
-            showRemovePlayerDialog(player)
+        playerListAdapter.onItemClick = { player, view, position ->
+            showRemovePlayerDialog(player, position)
         }
 
         rvPlayers.apply {
@@ -104,8 +106,9 @@ class ManagePlayersFragment : Fragment(),
         }
     }
 
-    private fun showRemovePlayerDialog(player: User) {
+    private fun showRemovePlayerDialog(player: User, position: Int) {
         currentSelectedPlayer = player
+        currentSelectedPlayerListPosition = position
 
         val newFragment = ConfirmDialog()
         newFragment.setParentFragment(this)
@@ -124,17 +127,31 @@ class ManagePlayersFragment : Fragment(),
         }
     }
 
-    private fun removeSelectedPlayer() {
+    private fun removeSelectedPlayer(view: View) {
         val user = currentSelectedPlayer
-        mainScope.launch {
-            withContext(Dispatchers.IO) {
-                if (user != null) {
-                    userRepository.delete(user)
-                }
-
-                this@ManagePlayersFragment.retrievePlayers()
-            }
+        val position = currentSelectedPlayerListPosition
+        playerListAdapter.remove(position!!)
+        val snackbar: Snackbar =
+            Snackbar.make(view, user?.fullName.toString() + " is deleted", Snackbar.LENGTH_LONG)
+        snackbar.setAction(
+            "Undo"
+        ) {
+            playerListAdapter.add(user, position)
         }
+        snackbar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
+                if (event == DISMISS_EVENT_TIMEOUT) {
+                    mainScope.launch {
+                        withContext(Dispatchers.IO) {
+                            if (user != null) {
+                                userRepository.delete(user)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        snackbar.show()
     }
 
     /**

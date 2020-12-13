@@ -74,11 +74,11 @@ class StartGameFragment : Fragment() {
         playerViewManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
 
         playerListAdapter.isSelectionEnabled = true
-        playerListAdapter.onItemClick = { player, view ->
+        playerListAdapter.onItemClick = { player, view, position ->
             onPlayerClicked(player, view)
         }
 
-        gamesListAdapter.onItemClick = { game, view ->
+        gamesListAdapter.onItemClick = { game, view, position ->
             onGameClicked(game, view)
         }
 

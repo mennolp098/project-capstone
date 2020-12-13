@@ -10,5 +10,6 @@ data class User(
     @ColumnInfo(name = "fullName") var fullName: String,
     @ColumnInfo(name = "isAppOwner") var isAppOwner: Boolean,
     @ColumnInfo(name = "isSelected") var isSelected: Boolean,
-    @ColumnInfo(name = "color") var color: Int
+    @ColumnInfo(name = "color") var color: Int,
+    @ColumnInfo(name = "isDeleted") var isDeleted: Boolean = false
 )

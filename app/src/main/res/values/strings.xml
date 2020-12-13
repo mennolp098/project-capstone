@@ -11,8 +11,8 @@
     <string name="new_player_introduction">A new player enters the game</string>
     <string name="cancel">cancel</string>
     <string name="create">create</string>
-    <string name="remove_player">Are you sure you want to remove this player?</string>
-    <string name="remove_game">Are you sure you want to remove this game?</string>
+    <string name="remove_player">Are you sure you want to remove this player?\n\nAny player results in games will also be removed!</string>
+    <string name="remove_game">Are you sure you want to remove this game?\n\nAll games played with these rules will be removed!</string>
     <string name="start_new_game">start new game</string>
     <string name="manage_players">manage players</string>
     <string name="manage_games">manage games</string>

@@ -1,11 +1,16 @@
 package com.example.capstoneproject.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
-@Entity()
+@Entity(foreignKeys =
+    arrayOf(
+        ForeignKey(
+        onDelete = CASCADE, entity = User::class,
+                parentColumns = arrayOf("userUid"), childColumns = arrayOf("userUid")
+        )
+    )
+)
 data class PlayerResult(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "playerResultUid", index = true) var playerResultUid: Int?,
     @ColumnInfo(name = "gameSessionUid", index = true) var gameSessionUid: Int,
