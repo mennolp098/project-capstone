@@ -7,10 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
+import android.widget.Toast
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.Game
+import com.example.capstoneproject.entities.Game
 import com.example.capstoneproject.room.GameRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +49,12 @@ class NewGameFragment : Fragment() {
         view.findViewById<Button>(R.id.btnCreate).setOnClickListener{
             onCreateButtonClicked(view)
         }
+        view.findViewById<Button>(R.id.btnLose).setOnClickListener{
+            Toast.makeText(context, resources.getText(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
+        }
+        view.findViewById<Button>(R.id.btnLetters).setOnClickListener{
+            Toast.makeText(context, resources.getText(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -64,7 +69,7 @@ class NewGameFragment : Fragment() {
         val trackEnd = resources.getString(R.string.win)
 
         val game = Game(
-            uid = null,
+            gameUid = null,
             name = name,
             trackKind = trackKind,
             trackAmount = trackAmount,

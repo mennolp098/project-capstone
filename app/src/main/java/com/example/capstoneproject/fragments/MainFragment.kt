@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -95,6 +96,8 @@ class MainFragment : Fragment() {
      * Navigates towards leaderboards fragment
      */
     private fun onLeaderboardsButtonClicked(view: View) {
+        Toast.makeText(context, resources.getText(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
+        return
         findNavController().navigate(R.id.action_mainFragment_to_leaderboardsFragment)
     }
 

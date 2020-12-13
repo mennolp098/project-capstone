@@ -11,7 +11,9 @@
         tools:layout="@layout/fragment_start" >
         <action
             android:id="@+id/action_startFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@+id/fragment_start"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_startFragment_to_newUserFragment"
             app:destination="@id/newUserFragment" />
@@ -23,7 +25,8 @@
         tools:layout="@layout/fragment_new_user" >
         <action
             android:id="@+id/action_newUserFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@+id/mainFragment"/>
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -72,7 +75,11 @@
         android:id="@+id/historyFragment"
         android:name="com.example.capstoneproject.fragments.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_historyFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
     <fragment
         android:id="@+id/manageGamesFragment"
         android:name="com.example.capstoneproject.fragments.ManageGamesFragment"
@@ -100,5 +107,23 @@
         android:id="@+id/gameFragment"
         android:name="com.example.capstoneproject.fragments.GameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_game" />
+        tools:layout="@layout/fragment_game" >
+        <action
+            android:id="@+id/action_gameFragment_to_gameEndFragment"
+            app:destination="@id/gameEndFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameEndFragment"
+        android:name="com.example.capstoneproject.fragments.GameEndFragment"
+        android:label="fragment_game_end"
+        tools:layout="@layout/fragment_game_end" >
+        <action
+            android:id="@+id/action_gameEndFragment_to_startGameFragment"
+            app:destination="@id/startGameFragment"
+            app:popUpTo="@+id/mainFragment"/>
+        <action
+            android:id="@+id/action_gameEndFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@+id/mainFragment"/>
+    </fragment>
 </navigation>

@@ -4,13 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.capstoneproject.models.Game
-import com.example.capstoneproject.models.User
+import androidx.room.TypeConverters
+import com.example.capstoneproject.converters.Converters
+import com.example.capstoneproject.entities.Game
+import com.example.capstoneproject.entities.GameSession
+import com.example.capstoneproject.entities.PlayerResult
+import com.example.capstoneproject.entities.User
 
-@Database(entities = arrayOf(User::class, Game::class), version = 4)
+@Database(entities = arrayOf(User::class, Game::class, PlayerResult::class, GameSession::class), version = 18)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun gameDao(): GameDao
+    abstract fun playerResultDao(): PlayerResultDao
+    abstract fun gameSessionDao(): GameSessionDao
 
     companion object {
         private const val DATABASE_NAME = "APP_DATABASE"

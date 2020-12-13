@@ -5,12 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.User
-import kotlin.random.Random
+import com.example.capstoneproject.entities.User
 
 
 class PlayerListAdapter(private val players: List<User>) : RecyclerView.Adapter<PlayerListAdapter.ViewHolder>() {

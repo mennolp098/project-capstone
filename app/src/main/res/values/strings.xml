@@ -41,7 +41,26 @@
     <string name="go_to_next_step">go to next step</string>
     <string name="start_game">start game</string>
 
+    <string name="who_will_win">Who will win?</string>
+    <string name="game_hint">Select a player to add or remove points</string>
+
     <string name="hello_blank_fragment"> </string>
+    <string name="add_points">How many points would you like to add?</string>
+    <string name="reset">reset</string>
+    <string name="confirm">confirm</string>
+
+    <string name="not_yet_implemented">This functionality is not yet implemented.</string>
+
+    <string name="the_winner_is">And the winner is!</string>
+    <string name="points_between">A big win with %d points between the second best!</string>
+    <string name="another_round">let\'s play another round</string>
+    <string name="back_to_main">i want to go back to the main menu</string>
+
+    <string name="look_at_history">Let\'s look at your history</string>
+    <string name="open_game_session">Do you want to continue this game?</string>
+
+    <string name="winner">Winner!</string>
+    <string name="game_session_title">%s | %s</string>
 
     <integer-array name="track_kinds">
         <item>@string/numeric</item>

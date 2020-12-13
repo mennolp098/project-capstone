@@ -11,16 +11,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
 import com.example.capstoneproject.adapters.GamesListAdapter
-import com.example.capstoneproject.adapters.PlayerListAdapter
 import com.example.capstoneproject.dialogs.ConfirmDialog
-import com.example.capstoneproject.dialogs.TextDialog
-import com.example.capstoneproject.models.Game
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.Game
 import com.example.capstoneproject.room.GameRepository
-import com.example.capstoneproject.room.UserRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_manage_games.*
-import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

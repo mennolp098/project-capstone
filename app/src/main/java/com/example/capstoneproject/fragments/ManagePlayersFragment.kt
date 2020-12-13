@@ -12,7 +12,7 @@ import com.example.capstoneproject.R
 import com.example.capstoneproject.adapters.PlayerListAdapter
 import com.example.capstoneproject.dialogs.TextDialog
 import com.example.capstoneproject.dialogs.ConfirmDialog
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.UserRepository
 import com.example.capstoneproject.utils.ColorUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -144,7 +144,7 @@ class ManagePlayersFragment : Fragment(),
         mainScope.launch {
             val randomColor = ColorUtils().getRandomAndroidColor(resources)
             val user = User(
-                uid = null,
+                userUid = null,
                 fullName = fullName,
                 isAppOwner = false,
                 isSelected = false,

@@ -8,17 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.Game
+import com.example.capstoneproject.entities.Game
+import com.example.capstoneproject.entities.GameSession
+import com.example.capstoneproject.entities.PlayerResult
 import com.example.capstoneproject.room.GameRepository
+import com.example.capstoneproject.room.GameSessionRepository
+import com.example.capstoneproject.room.PlayerResultRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val ARG_GAME_ID = "game_id"
-private const val ARG_PROFILE_IDS = "profile_ids"
+private const val ARG_PROFILE_IDS = "player_ids"
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +31,8 @@ private const val ARG_PROFILE_IDS = "profile_ids"
  * create an instance of this fragment.
  */
 class StartGameRulesFragment : Fragment() {
+    private lateinit var gameSessionRepository: GameSessionRepository
+    private lateinit var playerResultRepository: PlayerResultRepository
     private lateinit var gameRepository: GameRepository
     private val mainScope = CoroutineScope(Dispatchers.Main)
     private var gameID: Int? = null
@@ -51,6 +58,8 @@ class StartGameRulesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        gameSessionRepository = GameSessionRepository(requireContext())
+        playerResultRepository = PlayerResultRepository(requireContext())
         gameRepository = GameRepository(requireContext())
         initialiseGameRules(view)
         setListeners(view)
@@ -63,7 +72,42 @@ class StartGameRulesFragment : Fragment() {
     }
 
     private fun onStartGameButtonClicked() {
-        //findNavController().navigate(R.id.)
+        createGameSession()
+    }
+
+    private fun createPlayerResults(gameSessionId: Int) {
+        mainScope.launch {
+            withContext(Dispatchers.IO) {
+                playerIDs?.forEach {
+                    val playerResult = PlayerResult(
+                        playerResultUid = null,
+                        gameSessionUid = gameSessionId,
+                        userUid = it,
+                        amount = 0
+
+                    )
+                    playerResultRepository.create(playerResult)
+                }
+            }
+
+            val bundle = bundleOf("game_session_id" to gameSessionId)
+            findNavController().navigate(R.id.action_startGameRulesFragment_to_gameFragment, bundle)
+        }
+    }
+
+    private fun createGameSession() {
+        mainScope.launch {
+            val gameSession = GameSession(
+                gameSessionUid = null,
+                gameUid = gameID!!
+            )
+
+            val gameSessionId: Long = withContext(Dispatchers.IO) {
+                gameSessionRepository.create(gameSession)
+            }[0]
+
+            this@StartGameRulesFragment.createPlayerResults(gameSessionId.toInt())
+        }
     }
 
     private fun initialiseGameRules(view: View) {

@@ -1,8 +1,7 @@
 package com.example.capstoneproject.room
 
 import android.content.Context
-import com.example.capstoneproject.models.Game
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.Game
 
 class GameRepository(context: Context) {
 

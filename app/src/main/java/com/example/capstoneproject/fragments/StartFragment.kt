@@ -1,14 +1,13 @@
 package com.example.capstoneproject.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

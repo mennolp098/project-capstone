@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +65,7 @@ class NewUserFragment : Fragment() {
     private fun saveUser(fullName: String) {
         mainScope.launch {
             val user = User(
-                uid = 0,
+                userUid = 0,
                 fullName = fullName,
                 isAppOwner = true,
                 isSelected = false,

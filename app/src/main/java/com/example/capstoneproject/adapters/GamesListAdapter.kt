@@ -1,15 +1,12 @@
 package com.example.capstoneproject.adapters
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
-import com.example.capstoneproject.models.Game
-import com.example.capstoneproject.models.User
-import kotlin.random.Random
+import com.example.capstoneproject.entities.Game
 
 
 class GamesListAdapter(private val games: List<Game>) : RecyclerView.Adapter<GamesListAdapter.ViewHolder>() {

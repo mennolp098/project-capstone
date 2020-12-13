@@ -1,7 +1,7 @@
 package com.example.capstoneproject.room
 
 import android.content.Context
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.User
 
 class UserRepository(context: Context) {
 

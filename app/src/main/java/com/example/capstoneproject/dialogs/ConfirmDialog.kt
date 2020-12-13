@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.capstoneproject.R
@@ -42,11 +43,11 @@ class ConfirmDialog : DialogFragment() {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
-            val dialogView: View = inflater.inflate(R.layout.dialog_input, null)
+            val dialogView: View = inflater.inflate(R.layout.dialog_confirm, null)
 
-            dialogView.findViewById<EditText>(R.id.tvHint).hint = hintText
+            dialogView.findViewById<TextView>(R.id.tvHint).text = hintText
             builder.setView(dialogView)
-                .setPositiveButton(R.string.create,
+                .setPositiveButton(R.string.confirm,
                     DialogInterface.OnClickListener { dialog, id ->
                         val fullName = getDialog()?.findViewById<EditText>(R.id.etInputField)?.text.toString()
                         listener.onDialogPositiveClick(this)

@@ -1,6 +1,7 @@
 package com.example.capstoneproject.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +9,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstoneproject.R
 import com.example.capstoneproject.adapters.GamesListAdapter
 import com.example.capstoneproject.adapters.PlayerListAdapter
-import com.example.capstoneproject.models.Game
-import com.example.capstoneproject.models.User
+import com.example.capstoneproject.entities.Game
+import com.example.capstoneproject.entities.User
 import com.example.capstoneproject.room.GameRepository
 import com.example.capstoneproject.room.UserRepository
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_manage_games.*
 import kotlinx.android.synthetic.main.fragment_manage_players.*
 import kotlinx.coroutines.CoroutineScope
@@ -112,11 +111,11 @@ class StartGameFragment : Fragment() {
     private fun onGameClicked(game: Game, view: View) {
         val playerIds = ArrayList<Int>();
         playersList.forEach { player ->
-            if(player.isSelected) {
-                playerIds.add(player.uid!!)
+            if(player.isSelected || player.isAppOwner) {
+                playerIds.add(player.userUid!!)
             }
         }
-        val bundle = bundleOf("game_id" to game.uid, "player_ids" to playerIds)
+        val bundle = bundleOf("game_id" to game.gameUid, "player_ids" to playerIds)
         findNavController().navigate(R.id.action_startGameFragment_to_startGameRulesFragment, bundle)
     }
 
