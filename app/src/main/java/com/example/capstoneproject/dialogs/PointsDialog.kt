@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -17,6 +18,7 @@ import com.example.capstoneproject.R
 class PointsDialog : DialogFragment() {
     // Use this instance of the interface to deliver action events
     private lateinit var listener: PointsDialogListener
+    private lateinit var seekBarListener: SeekBar.OnSeekBarChangeListener
     private var hintText: String = "DEFAULT_STRING"
     private var defaultValue: Int = 0
     private var buttonSteps: Array<Int> = arrayOf(0,0,0,0,0,0)
@@ -95,8 +97,8 @@ class PointsDialog : DialogFragment() {
     }
 
     private fun initDialogView(dialogView: View) {
-        val outputText = getNegativeOrPositiveText(defaultValue)
-        dialogView.findViewById<TextView>(R.id.tvPointsOutput).text = outputText
+        resetPoints(dialogView)
+
         dialogView.findViewById<TextView>(R.id.tvHint).text = hintText
         dialogView.findViewById<Button>(R.id.btnMinusOne).text = getNegativeOrPositiveText(buttonSteps[0])
         dialogView.findViewById<Button>(R.id.btnMinusTwo).text = getNegativeOrPositiveText(buttonSteps[1])
@@ -104,7 +106,26 @@ class PointsDialog : DialogFragment() {
         dialogView.findViewById<Button>(R.id.btnPlusOne).text = getNegativeOrPositiveText(buttonSteps[3])
         dialogView.findViewById<Button>(R.id.btnPlusTwo).text = getNegativeOrPositiveText(buttonSteps[4])
         dialogView.findViewById<Button>(R.id.btnPlusThree).text = getNegativeOrPositiveText(buttonSteps[5])
+        dialogView.findViewById<SeekBar>(R.id.sbPointsOutput).max = maximum
+        dialogView.findViewById<SeekBar>(R.id.sbPointsOutput).setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seek: SeekBar,
+                progress: Int, fromUser: Boolean
+            ) {
+                // write custom code for progress is changed
+                setPoints(minimum + progress, dialogView)
+            }
 
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+        })
         setListeners(dialogView)
     }
 
@@ -137,6 +158,7 @@ class PointsDialog : DialogFragment() {
 
         val outputText = getNegativeOrPositiveText(points)
         dialogView.findViewById<TextView>(R.id.tvPointsOutput).text = outputText
+        dialogView.findViewById<SeekBar>(R.id.sbPointsOutput).progress = points
     }
 
     private fun addPoints(i: Int, dialogView: View) {
@@ -149,6 +171,14 @@ class PointsDialog : DialogFragment() {
         {
             points = minimum
         }
+
+        val outputText = getNegativeOrPositiveText(points)
+        dialogView.findViewById<TextView>(R.id.tvPointsOutput).text = outputText
+        dialogView.findViewById<SeekBar>(R.id.sbPointsOutput).progress = points
+    }
+
+    private fun setPoints(i: Int, dialogView: View) {
+        points = i
 
         val outputText = getNegativeOrPositiveText(points)
         dialogView.findViewById<TextView>(R.id.tvPointsOutput).text = outputText
