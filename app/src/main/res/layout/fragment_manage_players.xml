@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4EBC8C"
+    android:background="@color/darkred"
     android:paddingStart="20dp"
     android:paddingLeft="20dp"
     android:paddingEnd="20dp"
@@ -58,6 +58,7 @@
         android:layout_marginBottom="20dp"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
+        android:focusable="true"
         android:src="@android:drawable/ic_input_add"
         android:tint="#000000"
         app:fabSize="normal"
@@ -66,7 +67,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:focusable="true" />
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
