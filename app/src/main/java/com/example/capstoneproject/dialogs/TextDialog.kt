@@ -50,7 +50,7 @@ class TextDialog : DialogFragment() {
             val inflater = requireActivity().layoutInflater
             val dialogView: View = inflater.inflate(R.layout.dialog_input, null)
 
-            dialogView.findViewById<EditText>(R.id.etInputField).hint = hintText
+            dialogView.findViewById<EditText>(R.id.etInputField).hint = inputHintText
             dialogView.findViewById<TextView>(R.id.tvHint).text = hintText
 
             builder.setView(dialogView)
