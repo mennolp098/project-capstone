@@ -74,7 +74,7 @@ class GameEndFragment : Fragment() {
     }
 
     private fun onStartNewRoundPressed() {
-        val navOptions = NavOptions.Builder().setPopUpTo(R.id.startGameFragment, false).build()
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, false).build()
         findNavController().navigate(R.id.action_gameEndFragment_to_startGameFragment, null, navOptions)
     }
 

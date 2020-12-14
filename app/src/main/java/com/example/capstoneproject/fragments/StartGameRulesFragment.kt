@@ -118,7 +118,7 @@ class StartGameRulesFragment : Fragment(),
     }
 
     override fun onPlayerResultsCreated() {
-        val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, true).build()
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, false).build()
         val bundle = bundleOf("game_session_id" to createdGameSessionUid)
         findNavController().navigate(
             R.id.action_startGameRulesFragment_to_gameFragment,

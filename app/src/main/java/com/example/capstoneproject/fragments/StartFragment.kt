@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
 import com.example.capstoneproject.entities.User
@@ -41,7 +42,17 @@ class StartFragment : Fragment() {
     }
 
     private fun navigateToCorrectFragment() {
-        findNavController().navigate(R.id.action_startFragment_to_newUserFragment)
+        userViewModel.owner.observeOnce(viewLifecycleOwner, Observer { user ->
+
+            if (user == null) {
+                val navOptions = NavOptions.Builder().setPopUpTo(R.id.newUserFragment, true).build()
+                findNavController().navigate(R.id.action_startFragment_to_newUserFragment, null, navOptions)
+
+            } else {
+                val navOptions = NavOptions.Builder().setPopUpTo(R.id.startFragment, true).build()
+                findNavController().navigate(R.id.action_startFragment_to_mainFragment, null, navOptions)
+            }
+        })
     }
 
 }

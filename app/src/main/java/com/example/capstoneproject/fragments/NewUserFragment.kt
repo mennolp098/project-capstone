@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.capstoneproject.R
 import com.example.capstoneproject.entities.User
@@ -48,7 +49,8 @@ class NewUserFragment : Fragment() {
         })
 
         userViewModel.success.observeOnce(viewLifecycleOwner, Observer {     success ->
-            findNavController().navigate(R.id.action_newUserFragment_to_mainFragment)
+            val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, false).build()
+            findNavController().navigate(R.id.action_newUserFragment_to_mainFragment, null, navOptions)
         })
     }
     /**

@@ -158,7 +158,7 @@ class GameFragment : Fragment(),
             }
         }
 
-        val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, true).build()
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.gameEndFragment, true).build()
         val bundle = bundleOf("user_full_name" to userFullName, "points_between_first_and_second" to pointsBetweenFirstAndSecond)
         findNavController().navigate(R.id.action_gameFragment_to_gameEndFragment, bundle, navOptions)
     }
